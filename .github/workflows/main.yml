@@ -126,6 +126,54 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+     name: Azure Login
+        run: |
+          az login \
+            --service-principal \
+            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
+            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764" \
+
+      - name: Set Azure Subscription
+        run: |
+          az account set \
+            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+
+      - name: Check Azure Login
+        run: az account show
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+
+    needs: terraform-plan
+
+    # Apply ONLY after push to main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    defaults:
+      run:
+        working-directory: parrent module
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Azure Login
         run: |
           az login \
@@ -138,7 +186,6 @@ jobs:
         run: |
           az account set \
            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
-
       - name: Check Azure Login
         run: az account show
 
