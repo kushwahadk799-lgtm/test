@@ -84,7 +84,7 @@ jobs:
             --service-principal \
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764" \
 
       - name: Set Azure Subscription
         run: |
@@ -132,7 +132,7 @@ jobs:
             --service-principal \  
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"  \
 
       - name: Set Azure Subscription
         run: |
