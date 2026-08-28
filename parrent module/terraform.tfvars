@@ -1,14 +1,6 @@
-rgs = {
+resource_groups = {
   rg1 = {
-    name     = "bhatt_rg"
-    location = "centralindia"
-  }
-  rg2 = {
-    name     = "bhatt2_rg"
-    location = "centralindia"
-  }
-  rg3 = {
-    name     = "rahul_rg"
-    location = "centralindia"
+    name     = "rg-terraform-demo"
+    location = "East US"
   }
 }
