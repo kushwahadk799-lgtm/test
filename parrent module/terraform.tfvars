@@ -42,6 +42,10 @@ subnet_nsg_associations = {
     subnet_id = "subnet1"
     network_security_group_id    = "nsg1"
   }
+  subnet2_nsg2 = {
+    subnet_id                 = "subnet2"
+    network_security_group_id = "nsg1"
+  }
 }
 
 
