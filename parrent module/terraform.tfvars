@@ -39,8 +39,8 @@ network_security_groups = {
 
 subnet_nsg_associations = {
   subnet1_nsg1 = {
-    subnet_key = "subnet1"
-    nsg_key    = "nsg1"
+    subnet_id = "subnet1"
+    network_security_group_id    = "nsg1"
   }
 }
 
