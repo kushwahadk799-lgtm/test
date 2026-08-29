@@ -95,8 +95,7 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: parrent module
-          skip_check: CKV2_AZURE_31
-
+         skip_check: CKV2_AZURE_31
       # --------------------------------------------------------
       # Terraform Format
       # --------------------------------------------------------

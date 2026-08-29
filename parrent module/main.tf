@@ -53,11 +53,14 @@ module "subnet_nsg_associations" {
 
   subnet_nsg_associations = {
     for key, value in var.subnet_nsg_associations : key => {
-      subnet_id = data.azurerm_subnet.subnet_data_block[each.key].id
+      subnet_id = data.azurerm_subnet.subnet_data_block[value.subnet_id].id
 
-      network_security_group_id = data.azurerm_network_security_group.nsg[each.key].id
+      network_security_group_id = data.azurerm_network_security_group.nsg[value.network_security_group_id].id
     }
   }
 
-  depends_on = [module.subnets, module.network_security_groups]
+  depends_on = [
+    module.subnets,
+    module.network_security_groups
+  ]
 }
