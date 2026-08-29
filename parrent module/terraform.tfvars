@@ -27,7 +27,21 @@ subnets = {
     virtual_network_name = "vnet-terraform-demo"
     address_prefixes     = ["10.0.2.0/24"]
   }
+}
 
+network_security_groups = {
+  nsg1 = {
+    name                = "nsg-terraform-demo"
+    location            = "East US"
+    resource_group_name = "rg-terraform-demo"
+  }
+}
+
+subnet_nsg_associations = {
+  subnet1_nsg1 = {
+    subnet_key = "subnet1"
+    nsg_key    = "nsg1"
+  }
 }
 
 
