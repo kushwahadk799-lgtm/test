@@ -29,3 +29,22 @@ variable "subnets" {
     address_prefixes     = list(string)
   }))
 }
+
+variable "network_security_groups" {
+  description = "Network Security Group configuration"
+
+  type = map(object({
+    name                = string
+    location            = string
+    resource_group_name = string
+  }))
+}
+
+variable "subnet_nsg_associations" {
+  description = "Subnet NSG association configuration"
+
+  type = map(object({
+    subnet_id                 = string
+    network_security_group_id = string
+  }))
+}

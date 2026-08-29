@@ -6,3 +6,4 @@ resource "azurerm_subnet" "subnet-block" {
   virtual_network_name = each.value.virtual_network_name
   address_prefixes     = each.value.address_prefixes
 }
+
