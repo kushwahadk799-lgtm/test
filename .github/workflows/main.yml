@@ -96,11 +96,15 @@ jobs:
         with:
           directory: parrent module
 <<<<<<< HEAD
+<<<<<<< HEAD
          skip_check: CKV2_AZURE_31
 =======
           skip_check: CKV2_AZURE_31
 
 >>>>>>> 2af5946bb2260553141666fafebcf5279e193d81
+=======
+         skip_check: CKV2_AZURE_31
+>>>>>>> 072d0bc36d29188965da2dec0f8a735e8cdc2433
       # --------------------------------------------------------
       # Terraform Format
       # --------------------------------------------------------

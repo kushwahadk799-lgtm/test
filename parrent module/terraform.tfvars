@@ -37,16 +37,17 @@ network_security_groups = {
   }
 }
 
-subnet_nsg_associations = {
-  subnet1_nsg1 = {
-    subnet_id = "subnet1"
-    network_security_group_id    = "nsg1"
-  }
-  subnet2_nsg2 = {
-    subnet_id                 = "subnet2"
-    network_security_group_id = "nsg1"
+virtual_machine = {
+  vm1 = {
+    vm_name               = "vm-terraform-demo"
+    location              = "East US"
+    resource_group_name   = "rg-terraform-demo"
+    subnet_name           = "subnet-starlink"
+    virtual_network_name  = "vnet-terraform-demo"
+    nic_name              = "nic-terraform-demo"
+    public_ip_name        = "pip-terraform-demo"
+    ip_configuration_name = "ipconfig1"
   }
 }
-
 
 
