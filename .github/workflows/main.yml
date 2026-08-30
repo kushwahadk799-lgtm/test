@@ -23,7 +23,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: parrent module
+        working-directory: ./parent module
 
     steps:
 
@@ -33,46 +33,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+
       # --------------------------------------------------------
       # Setup Terraform
       # --------------------------------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # --------------------------------------------------------
-      # Azure Login
-      # --------------------------------------------------------
-      - name: Azure Login
-        run: |
-          az login \
-            --service-principal \
-            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
-            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764" \
 
       # --------------------------------------------------------
-      # Set Azure Subscription
-      # --------------------------------------------------------
-      - name: Set Azure Subscription
-        run: |
-          az account set \
-            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
-
-      # --------------------------------------------------------
-      # Check Azure Login
-      # --------------------------------------------------------
-      - name: Check Azure Login
-        run: az account show
-
-      # --------------------------------------------------------
-      # GITLEAKS
+      # GITLEAKS - Secret Scanning
       # --------------------------------------------------------
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         continue-on-error: true
 
+
       # --------------------------------------------------------
-      # TFLINT
+      # TFLINT - Terraform Linting
       # --------------------------------------------------------
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -82,34 +60,55 @@ jobs:
           tflint --init
           tflint
 
+
       # --------------------------------------------------------
-      # TFSEC
+      # TFSEC - Terraform Security Scan
       # --------------------------------------------------------
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: ./parent module
+
 
       # --------------------------------------------------------
-      # CHECKOV
+      # CHECKOV - IaC Security & Compliance
       # --------------------------------------------------------
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@v12
         with:
-          directory: parrent module
-<<<<<<< HEAD
-<<<<<<< HEAD
-         skip_check: CKV2_AZURE_31
-=======
-          skip_check: CKV2_AZURE_31
+          directory: ./parent module
 
->>>>>>> 2af5946bb2260553141666fafebcf5279e193d81
-=======
-         skip_check: CKV2_AZURE_31
->>>>>>> 072d0bc36d29188965da2dec0f8a735e8cdc2433
+
+      # --------------------------------------------------------
+      # Azure Login
+      # --------------------------------------------------------
+      - name: Azure Login
+        run: |
+          az login \
+            --service-principal \  
+            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
+            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
+
+      - name: Set Azure Subscription
+        run: |
+          az account set \
+           --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+
+
+      # --------------------------------------------------------
+      # Check Azure Login
+      # --------------------------------------------------------
+      - name: Check Azure Login
+        run: az account show
+
+
       # --------------------------------------------------------
       # Terraform Format
       # --------------------------------------------------------
       - name: Terraform Format
         run: terraform fmt -check -recursive
+
 
       # --------------------------------------------------------
       # Terraform Init
@@ -117,11 +116,13 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+
       # --------------------------------------------------------
       # Terraform Validate
       # --------------------------------------------------------
       - name: Terraform Validate
         run: terraform validate
+
 
       # --------------------------------------------------------
       # Terraform Plan
@@ -139,12 +140,12 @@ jobs:
 
     needs: terraform-plan
 
-    # Apply ONLY when code is pushed to main
+    # Apply ONLY after push to main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     defaults:
       run:
-        working-directory: parrent module
+        working-directory: ./parent module
 
     steps:
 
@@ -154,30 +155,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+
       # --------------------------------------------------------
       # Setup Terraform
       # --------------------------------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+
       # --------------------------------------------------------
       # Azure Login
       # --------------------------------------------------------
       - name: Azure Login
         run: |
-          az login \
-            --service-principal \
+         az login \
+            --service-principal \  
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764" \
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
 
-      # --------------------------------------------------------
-      # Set Azure Subscription
-      # --------------------------------------------------------
       - name: Set Azure Subscription
         run: |
           az account set \
-            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+           --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+
 
       # --------------------------------------------------------
       # Check Azure Login
@@ -185,11 +186,13 @@ jobs:
       - name: Check Azure Login
         run: az account show
 
+
       # --------------------------------------------------------
       # Terraform Init
       # --------------------------------------------------------
       - name: Terraform Init
         run: terraform init
+
 
       # --------------------------------------------------------
       # Terraform Validate
@@ -197,11 +200,13 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+
       # --------------------------------------------------------
       # Terraform Plan
       # --------------------------------------------------------
       - name: Terraform Plan
         run: terraform plan -out=tfplan
+
 
       # --------------------------------------------------------
       # Terraform Apply
