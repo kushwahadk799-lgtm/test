@@ -13,12 +13,3 @@ module "virtual_networks" {
     module.resource_group
   ]
 }
-
-module "subnets" {
-  source = "../child_module/subnets"
-
-  subnets = var.subnets
-
-  depends_on = [
-  module.virtual_networks]
-}
