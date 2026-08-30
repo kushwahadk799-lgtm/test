@@ -29,25 +29,5 @@ subnets = {
   }
 }
 
-network_security_groups = {
-  nsg1 = {
-    name                = "nsg-terraform-demo"
-    location            = "East US"
-    resource_group_name = "rg-terraform-demo"
-  }
-}
-
-virtual_machine = {
-  vm1 = {
-    vm_name               = "vm-terraform-demo"
-    location              = "East US"
-    resource_group_name   = "rg-terraform-demo"
-    subnet_name           = "subnet-starlink"
-    virtual_network_name  = "vnet-terraform-demo"
-    nic_name              = "nic-terraform-demo"
-    public_ip_name        = "pip-terraform-demo"
-    ip_configuration_name = "ipconfig1"
-  }
-}
 
 
