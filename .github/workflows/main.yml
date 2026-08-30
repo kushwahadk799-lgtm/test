@@ -30,7 +30,7 @@ jobs:
 
       - name: Azure Login
         run: |
-         az login \
+          az login \
             --service-principal \
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
@@ -80,14 +80,14 @@ jobs:
         run: |
           az login \
             --service-principal \
-            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
-            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
+            --username "9eac3105-2ec2-4f37-8b90-3d1d851fce11" \
+            --password "W4V8Q~NmAomNOfMjBrTUT.rcYDEUB8YgKRzAgduC" \
+            --tenant "0f7010fd-209e-4344-8457-043ffb37143b"
 
       - name: Set Azure Subscription
         run: |
           az account set \
-            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+            --subscription "bc9d2c5e-f99f-4142-8f22-8f6dae37180d"
 
       - name: Check Azure Login
         run: az account show
