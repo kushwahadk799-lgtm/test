@@ -23,7 +23,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./parent module
+        working-directory: ./parent-module
 
     steps:
 
@@ -67,7 +67,7 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
-          working_directory: ./parent module
+          working-directory: ./parent-module
 
 
       # --------------------------------------------------------
@@ -76,7 +76,7 @@ jobs:
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@v12
         with:
-          directory: ./parent module
+         working-directory: ./parent-module
 
 
       # --------------------------------------------------------
@@ -145,7 +145,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./parent module
+        working-directory: ./parent-module
 
     steps:
 
