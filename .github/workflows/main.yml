@@ -19,9 +19,59 @@ jobs:
 
     defaults:
       run:
-        working-directory: Parrent module
+        working-directory: parrent module
 
     steps:
+
+      # ----------------------------------------------------------
+      # Checkout
+      # ----------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+
+      # ----------------------------------------------------------
+      # Setup Terraform
+      # ----------------------------------------------------------
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+
+      # ----------------------------------------------------------
+      # 1. GITLEAKS - Secret Scanning
+      # ----------------------------------------------------------
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+
+
+      # ----------------------------------------------------------
+      # 2. TFLINT - Terraform Linting
+      # ----------------------------------------------------------
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Run TFLint
+        run: |
+          tflint --init
+          tflint
+
+
+      # ----------------------------------------------------------
+      # 3. TFSEC - Terraform Security Scan
+      # ----------------------------------------------------------
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+
+
+      # ----------------------------------------------------------
+      # 4. CHECKOV - IaC Security & Compliance
+      # ----------------------------------------------------------
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: parrent module
+     
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -30,7 +80,7 @@ jobs:
 
       - name: Azure Login
         run: |
-          az login \
+         az login \
             --service-principal \
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
@@ -67,7 +117,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Parrent module
+        working-directory: parrent module
 
     steps:
       - name: Checkout code
@@ -80,14 +130,14 @@ jobs:
         run: |
           az login \
             --service-principal \
-            --username "9eac3105-2ec2-4f37-8b90-3d1d851fce11" \
-            --password "W4V8Q~NmAomNOfMjBrTUT.rcYDEUB8YgKRzAgduC" \
-            --tenant "0f7010fd-209e-4344-8457-043ffb37143b"
+            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
+            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
 
       - name: Set Azure Subscription
         run: |
           az account set \
-            --subscription "bc9d2c5e-f99f-4142-8f22-8f6dae37180d"
+            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
 
       - name: Check Azure Login
         run: az account show
