@@ -19,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: environments/preprod
+        working-directory: Parrent module
 
     steps:
       - name: Checkout code
@@ -67,7 +67,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: environments/preprod
+        working-directory: Parrent module
 
     steps:
       - name: Checkout code
