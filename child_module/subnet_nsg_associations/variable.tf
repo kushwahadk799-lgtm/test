@@ -1,8 +1,15 @@
-variable "subnet_nsg_associations" {
-  description = "Subnet NSG association configuration"
+variable "subnet_name" {
+  type = string
+}
 
-  type = map(object({
-    subnet_id                 = string
-    network_security_group_id = string
-  }))
+variable "virtual_network_name" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "network_security_group_name" {
+  type = string
 }

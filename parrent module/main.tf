@@ -23,44 +23,36 @@ module "subnets" {
   module.virtual_networks]
 }
 
-data "azurerm_subnet" "subnet_data_block" {
-  for_each = var.subnets
-
-  name                 = each.value.name
-  virtual_network_name = each.value.virtual_network_name
-  resource_group_name  = each.value.resource_group_name
-
-  depends_on = [module.subnets]
-}
-
 module "network_security_groups" {
-  source                  = "../child_module/network_security_groups"
+  source = "../child_module/network_security_groups"
+
   network_security_groups = var.network_security_groups
-  depends_on              = [module.subnets]
-}
 
-data "azurerm_network_security_group" "nsg" {
-  for_each = var.network_security_groups
-
-  name                = each.value.name
-  resource_group_name = each.value.resource_group_name
-
-  depends_on = [module.network_security_groups]
+  depends_on = [
+    module.resource_group
+  ]
 }
 
 module "subnet_nsg_associations" {
   source = "../child_module/subnet_nsg_associations"
 
-  subnet_nsg_associations = {
-    for key, value in var.subnet_nsg_associations : key => {
-      subnet_id = data.azurerm_subnet.subnet_data_block[value.subnet_id].id
-
-      network_security_group_id = data.azurerm_network_security_group.nsg[value.network_security_group_id].id
-    }
-  }
+  subnet_name                 = var.subnet_name
+  virtual_network_name        = var.virtual_network_name
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = var.network_security_group_name
 
   depends_on = [
     module.subnets,
     module.network_security_groups
+  ]
+}
+
+module "nic" {
+  source = "../child_module/nic"
+
+  virtual_machine = var.virtual_machine
+
+  depends_on = [
+    module.subnet_nsg_associations 
   ]
 }

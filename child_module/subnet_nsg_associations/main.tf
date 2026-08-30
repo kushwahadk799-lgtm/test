@@ -1,6 +1,15 @@
-resource "azurerm_subnet_network_security_group_association" "association" {
-  for_each = var.subnet_nsg_associations
+data "azurerm_subnet" "subnet" {
+  name                 = var.subnet_name
+  virtual_network_name = var.virtual_network_name
+  resource_group_name  = var.resource_group_name
+}
 
-  subnet_id                 = each.value.subnet_id
-  network_security_group_id = each.value.network_security_group_id
+data "azurerm_network_security_group" "nsg" {
+  name                = var.network_security_group_name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_subnet_network_security_group_association" "association" {
+  subnet_id                 = data.azurerm_subnet.subnet.id
+  network_security_group_id = data.azurerm_network_security_group.nsg.id
 }

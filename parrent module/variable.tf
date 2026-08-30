@@ -31,20 +31,27 @@ variable "subnets" {
 }
 
 variable "network_security_groups" {
-  description = "Network Security Group configuration"
-
   type = map(object({
     name                = string
     location            = string
     resource_group_name = string
+    subnet_name_name = string
+    virtual_network_name = string
+    resource_group_name = string
+    network_security_group_name = string
+
   }))
 }
 
-variable "subnet_nsg_associations" {
-  description = "Subnet NSG association configuration"
-
+variable "virtual_machine" {
   type = map(object({
-    subnet_id                 = string
-    network_security_group_id = string
+    vm_name               = string
+    location              = string
+    resource_group_name   = string
+    subnet_name           = string
+    virtual_network_name  = string
+    nic_name              = string
+    public_ip_name        = string
+    ip_configuration_name = string
   }))
 }
