@@ -29,5 +29,19 @@ subnets = {
   }
 }
 
+network_security_groups = {
+  nsg1 = {
+    name                = "nsg-subnet1"
+    location            = "East US"
+    resource_group_name = "rg-terraform-demo"
+  }
+
+  nsg2 = {
+    name                = "nsg-subnet2"
+    location            = "East US"
+    resource_group_name = "rg-terraform-demo"
+  }
+}
+
 
 

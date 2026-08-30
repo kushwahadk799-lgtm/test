@@ -29,3 +29,11 @@ variable "subnets" {
     address_prefixes     = list(string)
   }))
 }
+
+variable "network_security_groups" {
+  type = map(object({
+    name                = string
+    location            = string
+    resource_group_name = string
+  }))
+}

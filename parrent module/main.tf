@@ -22,3 +22,9 @@ module "subnets" {
   depends_on = [
   module.virtual_networks]
 }
+
+module "nsg" {
+  source                  = "../child_module/nsg"
+  network_security_groups = var.network_security_groups
+  depends_on              = [module.virtual_networks]
+}
