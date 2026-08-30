@@ -13,67 +13,42 @@ permissions:
   contents: read
 
 jobs:
-
-  # ==========================================================
-  # TERRAFORM PLAN
-  # ==========================================================
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: parrent module
+        working-directory: parent module
 
     steps:
 
-      # --------------------------------------------------------
+      # ----------------------------------------------------------
       # Checkout
-      # --------------------------------------------------------
+      # ----------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
+        
 
-      # --------------------------------------------------------
+      # ----------------------------------------------------------
       # Setup Terraform
-      # --------------------------------------------------------
+      # ----------------------------------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # --------------------------------------------------------
-      # Azure Login
-      # --------------------------------------------------------
-      - name: Azure Login
-        run: |
-          az login \
-            --service-principal \
-            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
-            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764" \
 
-      # --------------------------------------------------------
-      # Set Azure Subscription
-      # --------------------------------------------------------
-      - name: Set Azure Subscription
-        run: |
-          az account set \
-            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
-
-      # --------------------------------------------------------
-      # Check Azure Login
-      # --------------------------------------------------------
-      - name: Check Azure Login
-        run: az account show
-
-      # --------------------------------------------------------
-      # GITLEAKS
-      # --------------------------------------------------------
+      # ----------------------------------------------------------
+      # 1. GITLEAKS - Secret Scanning
+      # ----------------------------------------------------------
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         continue-on-error: true
+      
 
-      # --------------------------------------------------------
-      # TFLINT
-      # --------------------------------------------------------
+
+      # ----------------------------------------------------------
+      # 2. TFLINT - Terraform Linting
+      # ----------------------------------------------------------
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
 
@@ -82,120 +57,100 @@ jobs:
           tflint --init
           tflint
 
-      # --------------------------------------------------------
-      # TFSEC
-      # --------------------------------------------------------
+
+      # ----------------------------------------------------------
+      # 3. TFSEC - Terraform Security Scan
+      # ----------------------------------------------------------
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.3
 
-     # --------------------------------------------------------
-# CHECKOV
-# --------------------------------------------------------
-- name: Run Checkov
-  uses: bridgecrewio/checkov-action@v12
-  with:
-    directory: parrent module
-    skip_check: CKV2_AZURE_31
 
-# --------------------------------------------------------
-# Terraform Format
-# --------------------------------------------------------
-- name: Terraform Format
-  run: terraform fmt -check -recursive
-
-# --------------------------------------------------------
-# Terraform Init
-# --------------------------------------------------------
-- name: Terraform Init
-  run: terraform init
-
-# --------------------------------------------------------
-# Terraform Validate
-# --------------------------------------------------------
-- name: Terraform Validate
-  run: terraform validate
-
-# --------------------------------------------------------
-# Terraform Plan
-# --------------------------------------------------------
-- name: Terraform Plan
-  run: terraform plan
-
-  # ==========================================================
-  # TERRAFORM APPLY
-  # ==========================================================
-  terraform-apply:
-    name: Terraform Apply
-    runs-on: ubuntu-latest
-
-    needs: terraform-plan
-
-    # Apply ONLY when code is pushed to main
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    defaults:
-      run:
-        working-directory: parrent module
-
-    steps:
-
-      # --------------------------------------------------------
-      # Checkout
-      # --------------------------------------------------------
+      # ----------------------------------------------------------
+      # 4. CHECKOV - IaC Security & Compliance
+      # ----------------------------------------------------------
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: parent module
+     
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --------------------------------------------------------
-      # Setup Terraform
-      # --------------------------------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # --------------------------------------------------------
-      # Azure Login
-      # --------------------------------------------------------
       - name: Azure Login
         run: |
           az login \
             --service-principal \
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
-            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764" \
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
 
-      # --------------------------------------------------------
-      # Set Azure Subscription
-      # --------------------------------------------------------
       - name: Set Azure Subscription
         run: |
           az account set \
             --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
 
-      # --------------------------------------------------------
-      # Check Azure Login
-      # --------------------------------------------------------
       - name: Check Azure Login
         run: az account show
 
-      # --------------------------------------------------------
-      # Terraform Init
-      # --------------------------------------------------------
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
       - name: Terraform Init
         run: terraform init
 
-      # --------------------------------------------------------
-      # Terraform Validate
-      # --------------------------------------------------------
       - name: Terraform Validate
         run: terraform validate
 
-      # --------------------------------------------------------
-      # Terraform Plan
-      # --------------------------------------------------------
+      - name: Terraform Plan
+        run: terraform plan
+
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+
+    needs: terraform-plan
+
+    # Apply ONLY after push to main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    defaults:
+      run:
+        working-directory: parent module
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        run: |
+          az login \
+            --service-principal \  
+            --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
+            --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
+            --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
+
+      - name: Set Azure Subscription
+        run: |
+          az account set \
+           --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+
+      - name: Check Azure Login
+        run: az account show
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
-      # --------------------------------------------------------
-      # Terraform Apply
-      # --------------------------------------------------------
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
