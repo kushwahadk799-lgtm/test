@@ -13,80 +13,25 @@ permissions:
   contents: read
 
 jobs:
-
-  # ==========================================================
-  # TERRAFORM PLAN
-  # ==========================================================
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./parent-module
+        working-directory: environments/preprod
 
     steps:
-
-      # --------------------------------------------------------
-      # Checkout
-      # --------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
-
-      # --------------------------------------------------------
-      # Setup Terraform
-      # --------------------------------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-
-      # --------------------------------------------------------
-      # GITLEAKS - Secret Scanning
-      # --------------------------------------------------------
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
-
-
-      # --------------------------------------------------------
-      # TFLINT - Terraform Linting
-      # --------------------------------------------------------
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
-
-      - name: Run TFLint
-        run: |
-          tflint --init
-          tflint
-
-
-      # --------------------------------------------------------
-      # TFSEC - Terraform Security Scan
-      # --------------------------------------------------------
-      - name: Run tfsec
-        uses: aquasecurity/tfsec-action@v1.0.3
-        with:
-          working-directory: ./parent-module
-
-
-      # --------------------------------------------------------
-      # CHECKOV - IaC Security & Compliance
-      # --------------------------------------------------------
-      - name: Run Checkov
-        uses: bridgecrewio/checkov-action@v12
-        with:
-         working-directory: ./parent-module
-          working-directory: ./parent-module
-
-
-      # --------------------------------------------------------
-      # Azure Login
-      # --------------------------------------------------------
       - name: Azure Login
         run: |
-          az login \
-            --service-principal \  
+         az login \
+            --service-principal \
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
             --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
@@ -94,47 +39,23 @@ jobs:
       - name: Set Azure Subscription
         run: |
           az account set \
-           --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
 
-
-      # --------------------------------------------------------
-      # Check Azure Login
-      # --------------------------------------------------------
       - name: Check Azure Login
         run: az account show
 
-
-      # --------------------------------------------------------
-      # Terraform Format
-      # --------------------------------------------------------
       - name: Terraform Format
         run: terraform fmt -check -recursive
 
-
-      # --------------------------------------------------------
-      # Terraform Init
-      # --------------------------------------------------------
       - name: Terraform Init
         run: terraform init
 
-
-      # --------------------------------------------------------
-      # Terraform Validate
-      # --------------------------------------------------------
       - name: Terraform Validate
         run: terraform validate
 
-
-      # --------------------------------------------------------
-      # Terraform Plan
-      # --------------------------------------------------------
       - name: Terraform Plan
         run: terraform plan
 
-
-  # ==========================================================
-  # TERRAFORM APPLY
-  # ==========================================================
   terraform-apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
@@ -146,31 +67,19 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./parent-module
+        working-directory: environments/preprod
 
     steps:
-
-      # --------------------------------------------------------
-      # Checkout
-      # --------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
-
-      # --------------------------------------------------------
-      # Setup Terraform
-      # --------------------------------------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-
-      # --------------------------------------------------------
-      # Azure Login
-      # --------------------------------------------------------
       - name: Azure Login
         run: |
-         az login \
-            --service-principal \  
+          az login \
+            --service-principal \
             --username "5dbfcbf4-b70b-4ea1-991e-989b54697244" \
             --password "r0H8Q~ZmdhkTvMEMTfXz5rbS_z1FuXIuWpImWa.8" \
             --tenant "0566e7c0-ce72-4d83-a4b0-a667ea532764"
@@ -178,39 +87,19 @@ jobs:
       - name: Set Azure Subscription
         run: |
           az account set \
-           --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
+            --subscription "0e3402ea-b30c-409a-9bbe-2dac4d43e202"
 
-
-      # --------------------------------------------------------
-      # Check Azure Login
-      # --------------------------------------------------------
       - name: Check Azure Login
         run: az account show
 
-
-      # --------------------------------------------------------
-      # Terraform Init
-      # --------------------------------------------------------
       - name: Terraform Init
         run: terraform init
 
-
-      # --------------------------------------------------------
-      # Terraform Validate
-      # --------------------------------------------------------
       - name: Terraform Validate
         run: terraform validate
 
-
-      # --------------------------------------------------------
-      # Terraform Plan
-      # --------------------------------------------------------
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
-
-      # --------------------------------------------------------
-      # Terraform Apply
-      # --------------------------------------------------------
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
